@@ -1,5 +1,4 @@
 local config = require "start-screen-sections.config"
-local plugin = require(("start-screen-sections.sections.%s"):format(config.get "plugin"))
 
 local M = {}
 
@@ -28,6 +27,8 @@ function M.get_undone_todos(file_name)
   if not ok then
     return {}
   end
+
+  local plugin = require(("start-screen-sections.sections.%s"):format(config.get_plugin()))
 
   local query, root, file_as_string = query_file(
     [[

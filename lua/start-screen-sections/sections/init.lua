@@ -1,11 +1,12 @@
 local config = require "start-screen-sections.config"
 local sessions = require "start-screen-sections.sessions"
 local treesitter = require "start-screen-sections.treesitter"
-local plugin = require(("start-screen-sections.sections.%s"):format(config.get "plugin"))
 
 local M = {}
 
 local function build_section(data)
+  local plugin = require(("start-screen-sections.sections.%s"):format(config.get_plugin()))
+
   local lines = {}
   local indices = {}
 
@@ -47,6 +48,8 @@ local function build_section(data)
 end
 
 local function general()
+  local plugin = require(("start-screen-sections.sections.%s"):format(config.get_plugin()))
+
   return build_section {
     name = config.get_main_section().name,
     command = plugin.to_line {
