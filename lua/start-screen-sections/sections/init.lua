@@ -23,7 +23,7 @@ local function build_section(data)
       table.insert(
         lines,
         plugin.to_line {
-          text = ("session (%s)"):format(session_name),
+          text = session_name,
           action = ("source %s"):format(sessions.session_files[session_name].path),
         }
       )
@@ -94,7 +94,7 @@ local function remaining_sessions()
 
   return build_section {
     name = "Sessions",
-    sessions = remaining_sessions,
+    sessions = session_names,
     todo_file = "",
     index = 90,
   }
