@@ -5,14 +5,14 @@ local M = {
 }
 
 function M.load_session_files()
-  if vim.fn.isdirectory(vim.fn.expand(config.get "sessions")) == 0 then
+  if vim.fn.isdirectory(vim.fn.expand(config.get_sessions())) == 0 then
     return
   end
 
   local files = vim.fs.find(function(file)
     return string.match(file, "^__") == nil
   end, {
-    path = config.get "sessions",
+    path = config.get_sessions(),
     type = "file",
     limit = math.huge,
   })

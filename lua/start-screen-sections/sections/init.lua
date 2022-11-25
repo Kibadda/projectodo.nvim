@@ -48,23 +48,23 @@ end
 
 local function general()
   return build_section {
-    name = config.get("main_section").name,
+    name = config.get_main_section().name,
     command = plugin.to_line {
       text = "Create New Project",
-      action = ("e %s/%s.norg"):format(config.get "notes", config.get "norg_main_file"),
+      action = ("e %s/%s.norg"):format(config.get_notes(), config.get_notes_main_file()),
     },
-    sessions = config.get("main_section").sessions,
-    todo_file = config.get "norg_main_file",
+    sessions = config.get_main_section().sessions,
+    todo_file = config.get_notes_main_file(),
     index = 1,
   }
 end
 
 local function current_projects()
-  local projects = treesitter.get_projects(config.get "norg_main_file")
+  local projects = treesitter.get_projects(config.get_notes_main_file())
 
   local sections = {}
 
-  local index = (#config.get("main_section").sessions + 1) * 10
+  local index = (#config.get_main_section().sessions + 1) * 10
   for _, project in ipairs(projects) do
     table.insert(
       sections,

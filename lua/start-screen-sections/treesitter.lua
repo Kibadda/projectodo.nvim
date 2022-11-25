@@ -4,7 +4,7 @@ local plugin = require(("start-screen-sections.sections.%s"):format(config.get "
 local M = {}
 
 local function check_file(file_name)
-  local file_path = vim.fn.expand(("%s/%s.norg"):format(config.get "notes", file_name))
+  local file_path = vim.fn.expand(("%s/%s.norg"):format(config.get_notes(), file_name))
 
   if vim.fn.filereadable(file_path) == 0 then
     return false, ""
@@ -51,7 +51,7 @@ function M.get_undone_todos(file_name)
     )
   end
 
-  return vim.list_slice(captures, 1, config.get "max_todos_per_project")
+  return vim.list_slice(captures, 1, config.get_max_todos_per_project())
 end
 
 function M.get_projects(file_name)
@@ -77,7 +77,7 @@ function M.get_projects(file_name)
                       text: (paragraph_segment) @name)))))))
         (#match? @project "%s")
       ]],
-      config.get "norg_project_header"
+      config.get_notes_project_header()
     ),
     file_path
   )
@@ -99,7 +99,7 @@ function M.get_projects(file_name)
     end
   end
 
-  return vim.list_slice(captures, 1, config.get "max_projects")
+  return vim.list_slice(captures, 1, config.get_max_projects())
 end
 
 return M
