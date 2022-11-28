@@ -4,7 +4,7 @@ local utils = require "start-screen-sections.utils"
 local M = {}
 
 local function check_file(file_name)
-  local file_path = vim.fn.expand(("%s/%s.norg"):format(config.get_notes(), file_name))
+  local file_path = vim.fn.expand(("%s/%s.%s"):format(config.get_notes(), file_name, config.get_notes_extension()))
 
   if vim.fn.filereadable(file_path) == 0 then
     return false, ""
@@ -16,8 +16,8 @@ end
 local function query_file(query_string, file_name)
   local file_as_string = table.concat(vim.fn.readfile(file_name), "\n")
 
-  local root = vim.treesitter.get_string_parser(file_as_string, "norg", {}):parse()[1]:root()
-  local query = vim.treesitter.parse_query("norg", query_string)
+  local root = vim.treesitter.get_string_parser(file_as_string, config.get_notes_extension(), {}):parse()[1]:root()
+  local query = vim.treesitter.parse_query(config.get_notes_extension(), query_string)
 
   return query, root, file_as_string
 end

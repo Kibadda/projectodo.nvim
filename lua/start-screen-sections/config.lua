@@ -8,6 +8,7 @@ local config = {
   max_projects = 6,
   max_todos_per_project = 9,
   notes_main_file = "index",
+  notes_extension = "norg",
   main_section = {
     name = "Main Section",
     sessions = {},
@@ -58,6 +59,7 @@ function M.set(user_config)
     max_projects = { user_config.max_projects, gte(1), "maximum projects on screen" },
     max_todos_per_project = { user_config.max_todos_per_project, gte(0), "maximum todos per project on screen" },
     notes_main_file = { user_config.notes_main_file, "string", true },
+    notes_extension = { user_config.extension, one_of({ "norg" }, true), "extension" },
     main_section = { user_config.main_section, "table", true },
   }
 
@@ -97,6 +99,10 @@ end
 
 function M.get_notes_main_file()
   return config.notes_main_file
+end
+
+function M.get_notes_extension()
+  return config.notes_extension
 end
 
 function M.get_main_section()

@@ -55,7 +55,7 @@ local function general()
     name = config.get_main_section().name,
     command = plugin.to_line {
       text = "Create New Project",
-      action = ("e %s/%s.norg"):format(config.get_notes(), config.get_notes_main_file()),
+      action = ("e %s/%s.%s"):format(config.get_notes(), config.get_notes_main_file(), config.get_notes_extension()),
     },
     sessions = config.get_main_section().sessions,
     todo_file = config.get_notes_main_file(),
