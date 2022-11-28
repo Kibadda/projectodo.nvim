@@ -14,15 +14,16 @@ local config = {
   },
 }
 
-local function check_plugin()
-  return function(plugin)
-    local available_plugins = { "vim-startify", "alpha-nvim", "mini-starter" }
-
-    return vim.tbl_contains(available_plugins, plugin), ("one of: %s"):format(table.concat(available_plugins, ", "))
+local function one_of(available, optional)
+  return function(value)
+    if optional and value == nil then
+      return true
+    end
+    return vim.tbl_contains(available, value), ("one of: %s"):format(table.concat(available, ", "))
   end
 end
 
-local function check_directory()
+local function is_directory()
   return function(path)
     if path == nil then
       return true
@@ -32,7 +33,7 @@ local function check_directory()
   end
 end
 
-local function check_number(limit)
+local function gte(limit)
   return function(number)
     if number == nil then
       return true
@@ -50,16 +51,12 @@ function M.set(user_config)
   }
 
   vim.validate {
-    plugin = { user_config.plugin, check_plugin(), "plugin" },
+    plugin = { user_config.plugin, one_of({ "vim-startify", "alpha-nvim", "mini-starter" }, false), "plugin" },
     notes_project_header = { user_config.notes_project_header, "string" },
-    sessions = { user_config.sessions, check_directory(), "sessions directory" },
-    notes = { user_config.notes, check_directory(), "notes directory" },
-    max_projects = { user_config.max_projects, check_number(1), "maximum projects on screen" },
-    max_todos_per_project = {
-      user_config.max_todos_per_project,
-      check_number(0),
-      "maximum todos per project on screen",
-    },
+    sessions = { user_config.sessions, is_directory(), "sessions directory" },
+    notes = { user_config.notes, is_directory(), "notes directory" },
+    max_projects = { user_config.max_projects, gte(1), "maximum projects on screen" },
+    max_todos_per_project = { user_config.max_todos_per_project, gte(0), "maximum todos per project on screen" },
     notes_main_file = { user_config.notes_main_file, "string", true },
     main_section = { user_config.main_section, "table", true },
   }
