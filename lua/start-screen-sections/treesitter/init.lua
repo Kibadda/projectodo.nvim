@@ -1,4 +1,5 @@
 local config = require "start-screen-sections.config"
+local utils = require "start-screen-sections.utils"
 
 local M = {}
 
@@ -28,8 +29,6 @@ function M.get_undone_todos(file_name)
     return {}
   end
 
-  local plugin = require(("start-screen-sections.sections.%s"):format(config.get_plugin()))
-
   local query, root, file_as_string = query_file(
     [[
       (todo_item1
@@ -41,6 +40,8 @@ function M.get_undone_todos(file_name)
   )
 
   local captures = {}
+
+  local plugin = utils.get_section_module()
 
   for _, node in query:iter_captures(root) do
     table.insert(
