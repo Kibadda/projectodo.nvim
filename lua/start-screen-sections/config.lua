@@ -1,18 +1,46 @@
 local M = {}
 
 local config = {
-  plugin = "vim-startify",
+  plugin = nil,
+  notes_project_header = nil,
   sessions = "$HOME/.local/share/nvim/session",
   notes = "$HOME/notes",
   max_projects = 6,
   max_todos_per_project = 9,
-  notes_project_header = nil,
   notes_main_file = "index",
   main_section = {
     name = "Main Section",
     sessions = {},
   },
 }
+
+local function check_plugin()
+  return function(plugin)
+    local available_plugins = { "vim-startify", "alpha-nvim", "mini-starter" }
+
+    return vim.tbl_contains(available_plugins, plugin), ("one of: %s"):format(table.concat(available_plugins, ", "))
+  end
+end
+
+local function check_directory()
+  return function(path)
+    if path == nil then
+      return true
+    end
+
+    return vim.fn.isdirectory(vim.fn.expand(path)) == 1, ("'%s' is not a directory"):format(path)
+  end
+end
+
+local function check_number(limit)
+  return function(number)
+    if number == nil then
+      return true
+    end
+
+    return number >= limit, ("must be greater than or equal to %d"):format(limit)
+  end
+end
 
 function M.set(user_config)
   user_config = user_config or {}
@@ -22,59 +50,16 @@ function M.set(user_config)
   }
 
   vim.validate {
-    plugin = {
-      user_config.plugin,
-      function(value)
-        if not value then
-          return true
-        end
-        local available_plugins = { "vim-startify", "alpha-nvim", "mini-starter" }
-
-        return vim.tbl_contains(available_plugins, value), ("one of: %s"):format(table.concat(available_plugins, ", "))
-      end,
-      "plugin name",
-    },
-    sessions = {
-      user_config.sessions,
-      function(value)
-        if not value then
-          return true
-        end
-        return vim.fn.isdirectory(vim.fn.expand(value)) == 1, ("'%s' is not a directory"):format(value)
-      end,
-      "sessions directory",
-    },
-    notes = {
-      user_config.notes,
-      function(value)
-        if not value then
-          return true
-        end
-        return vim.fn.isdirectory(vim.fn.expand(value)) == 1, ("'%s' is not a directory"):format(value)
-      end,
-      "sessions directory",
-    },
-    max_projects = {
-      user_config.max_projects,
-      function(value)
-        if not value then
-          return true
-        end
-        return value > 1, "must be greater than 1"
-      end,
-      "maximum projects on screen",
-    },
+    plugin = { user_config.plugin, check_plugin(), "plugin" },
+    notes_project_header = { user_config.notes_project_header, "string" },
+    sessions = { user_config.sessions, check_directory(), "sessions directory" },
+    notes = { user_config.notes, check_directory(), "notes directory" },
+    max_projects = { user_config.max_projects, check_number(1), "maximum projects on screen" },
     max_todos_per_project = {
       user_config.max_todos_per_project,
-      function(value)
-        if not value then
-          return true
-        end
-        return value >= 0, "must be greater than or equal to 0"
-      end,
+      check_number(0),
       "maximum todos per project on screen",
     },
-    notes_project_header = { user_config.notes_project_header, "string" },
     notes_main_file = { user_config.notes_main_file, "string", true },
     main_section = { user_config.main_section, "table", true },
   }
@@ -93,6 +78,10 @@ function M.get_plugin()
   return config.plugin
 end
 
+function M.get_notes_project_header()
+  return config.notes_project_header
+end
+
 function M.get_sessions()
   return config.sessions
 end
@@ -107,10 +96,6 @@ end
 
 function M.get_max_todos_per_project()
   return config.max_todos_per_project
-end
-
-function M.get_notes_project_header()
-  return config.notes_project_header
 end
 
 function M.get_notes_main_file()
