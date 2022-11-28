@@ -7,4 +7,9 @@ function M.get_section_module()
   return require(module)
 end
 
+function M.get_treesitter_module()
+  local module = ("start-screen-sections.treesitter.%s"):format(config.get_notes_extension())
+  return require(module)
+end
+
 return M

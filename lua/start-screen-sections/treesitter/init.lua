@@ -29,15 +29,7 @@ function M.get_undone_todos(file_name)
     return {}
   end
 
-  local query, root, file_as_string = query_file(
-    [[
-      (todo_item1
-        state: (todo_item_undone)
-        content: (paragraph (paragraph_segment) @todo)
-      )
-    ]],
-    file_path
-  )
+  local query, root, file_as_string = query_file(utils.get_treesitter_module().get_undone_todos_query(), file_path)
 
   local captures = {}
 
@@ -64,23 +56,7 @@ function M.get_projects(file_name)
   end
 
   local query, root, file_as_string = query_file(
-    string.format(
-      [[
-        (heading2
-          title: (paragraph_segment) @project
-          content: (generic_list
-            (unordered_list1
-              content: (paragraph
-                (paragraph_segment
-                  (link
-                    (link_location
-                      file: (link_file_text) @file_name)
-                    (link_description
-                      text: (paragraph_segment) @name)))))))
-        (#match? @project "%s")
-      ]],
-      config.get_notes_project_header()
-    ),
+    string.format(utils.get_treesitter_module().get_projects_query(), config.get_notes_project_header()),
     file_path
   )
 
