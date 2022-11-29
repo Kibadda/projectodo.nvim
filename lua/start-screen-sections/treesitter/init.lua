@@ -31,18 +31,23 @@ function M.get_undone_todos(file_name)
 
   local query, root, file_as_string = query_file(utils.get_treesitter_module().get_undone_todos_query(), file_path)
 
-  local captures = {}
-
   local plugin = utils.get_section_module()
 
-  for _, node in query:iter_captures(root) do
-    table.insert(
-      captures,
-      plugin.to_line {
-        text = vim.treesitter.get_node_text(node, file_as_string),
-        action = "",
-      }
-    )
+  local captures = {}
+
+  for _, match in query:iter_matches(root) do
+    for id, node in pairs(match) do
+      local name = query.captures[id]
+      if name == "todo_text" then
+        table.insert(
+          captures,
+          plugin.to_line {
+            text = vim.treesitter.get_node_text(node, file_as_string),
+            action = "",
+          }
+        )
+      end
+    end
   end
 
   return vim.list_slice(captures, 1, config.get_max_todos_per_project())
