@@ -1,5 +1,5 @@
-local config = require "start-screen-sections.config"
-local utils = require "start-screen-sections.utils"
+local config = require "projectodo.config"
+local utils = require "projectodo.utils"
 
 local M = {}
 

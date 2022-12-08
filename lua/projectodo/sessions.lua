@@ -1,4 +1,4 @@
-local config = require "start-screen-sections.config"
+local config = require "projectodo.config"
 
 local M = {
   session_files = {},

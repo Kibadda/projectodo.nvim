@@ -1,1 +1,1 @@
-# start-screen-sections.nvim
+# projectodo.nvim

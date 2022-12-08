@@ -1,7 +1,7 @@
-local config = require "start-screen-sections.config"
-local sessions = require "start-screen-sections.sessions"
-local treesitter = require "start-screen-sections.treesitter"
-local utils = require "start-screen-sections.utils"
+local config = require "projectodo.config"
+local sessions = require "projectodo.sessions"
+local treesitter = require "projectodo.treesitter"
+local utils = require "projectodo.utils"
 
 local M = {}
 
