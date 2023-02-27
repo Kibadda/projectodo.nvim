@@ -1,18 +1,22 @@
-local config = require "projectodo.config"
+---@class ProjectodoSession
+---@field path string
+---@field used boolean
 
 local M = {
+  ---@type ProjectodoSession[]
   session_files = {},
 }
 
 function M.load_session_files()
-  if vim.fn.isdirectory(vim.fn.expand(config.get_sessions())) == 0 then
+  local config = require "projectodo.config"
+  if vim.fn.isdirectory(vim.fn.expand(config.options.sessions)) == 0 then
     return
   end
 
   local files = vim.fs.find(function(file)
-    return string.match(file, "^__") == nil
+    return file:match "^__" == nil
   end, {
-    path = config.get_sessions(),
+    path = config.options.sessions,
     type = "file",
     limit = math.huge,
   })

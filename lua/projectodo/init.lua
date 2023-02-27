@@ -1,15 +1,12 @@
-local config = require "projectodo.config"
-local sessions = require "projectodo.sessions"
-local sections = require "projectodo.sections"
-
 local M = {}
 
-function M.get_sections(user_config)
-  config.set(user_config)
+---@param user_config? ProjectodoConfig
+function M.setup(user_config)
+  require("projectodo.config").set(user_config)
+end
 
-  sessions.load_session_files()
-
-  return sections.get_sections()
+function M.get_sections()
+  return require("projectodo.sections").get_sections()
 end
 
 return M

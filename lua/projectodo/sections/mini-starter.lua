@@ -1,3 +1,4 @@
+---@type ProjectodoSection
 local M = {}
 
 function M.to_line(data)
