@@ -16,7 +16,7 @@ for _, plugin in ipairs {
       "clone",
       "--depth=1",
       ("https://github.com/%s.git"):format(plugin),
-      ("%s/%s"):format(plugin, name),
+      ("%s/%s"):format(package, name),
     }
   end
 end
