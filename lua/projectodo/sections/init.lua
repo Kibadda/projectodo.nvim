@@ -65,7 +65,7 @@ local function general()
         config.options.notes.dir,
         config.options.notes.main,
         config.options.notes.extension
-      )
+      ),
     }
   end
 
@@ -100,7 +100,6 @@ local function remaining_sections()
   local session_names = {}
 
   local sessions = require "projectodo.sessions"
-  vim.pretty_print(sessions.session_files)
   for name, session in pairs(sessions.session_files) do
     if not session.used then
       table.insert(session_names, name)

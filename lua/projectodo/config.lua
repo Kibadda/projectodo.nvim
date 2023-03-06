@@ -30,6 +30,7 @@ end
 ---@type ProjectodoConfig
 M.options = {}
 
+---@param user_config? ProjectodoConfig
 function M.set(user_config)
   M.options = vim.tbl_deep_extend("force", M.defaults(), user_config or {})
 end
