@@ -15,7 +15,7 @@ local function query_file(query_string, file_name)
   local file_as_string = table.concat(vim.fn.readfile(file_name), "\n")
 
   local root = vim.treesitter.get_string_parser(file_as_string, config.options.notes.extension, {}):parse()[1]:root()
-  local query = vim.treesitter.query.parse_query(config.options.notes.extension, query_string)
+  local query = vim.treesitter.query.parse(config.options.notes.extension, query_string)
 
   return query, root, file_as_string
 end
@@ -40,7 +40,7 @@ function M.get_undone_todos(file_name)
         table.insert(
           captures,
           plugin.to_line {
-            text = vim.treesitter.query.get_node_text(node, file_as_string),
+            text = vim.treesitter.get_node_text(node, file_as_string),
             action = "",
           }
         )
@@ -78,7 +78,7 @@ function M.get_projects(file_name)
       for id, node in pairs(match) do
         local name = query.captures[id]
         if name ~= "project" then
-          capture[name] = vim.treesitter.query.get_node_text(node, file_as_string)
+          capture[name] = vim.treesitter.get_node_text(node, file_as_string)
         end
       end
 
