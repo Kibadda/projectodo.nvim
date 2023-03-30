@@ -1,17 +1,6 @@
----@type ProjectodoTreesitter
 local M = {}
 
-function M.get_undone_todos_query()
-  return [[
-    (_
-      state: (detached_modifier_extension (todo_item_undone))
-      content: (paragraph (paragraph_segment) @todo_text)
-    ) @todo
-  ]]
-end
-
-function M.get_projects_query()
-  return [[
+M.sections = [[
     (_
       title: (paragraph_segment) @project
       content: (generic_list
@@ -27,6 +16,12 @@ function M.get_projects_query()
     (#any-of? @heading "heading1" "heading2" "heading3" "heading4" "heading5" "heading6")
     (#match? @project "%s")
   ]]
-end
+
+M.items = [[
+    (_
+      state: (detached_modifier_extension (todo_item_undone))
+      content: (paragraph (paragraph_segment) @todo_text)
+    ) @todo
+  ]]
 
 return M

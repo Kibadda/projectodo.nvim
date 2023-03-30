@@ -1,23 +1,40 @@
 local M = {}
 
----@class ProjectodoSection
----@field to_line (fun(data: table): table)
----@field to_section (fun(data: table): table|function)
-
----@return ProjectodoSection
-function M.get_section_module()
+---@return table<string, ProjectodoSource>
+function M.get_sources()
   local config = require "projectodo.config"
-  return require(("projectodo.sections.%s"):format(config.options.plugin))
+
+  local sources = {}
+  for name, source in pairs(config.options.sources) do
+    if source.enabled then
+      sources[name] = require("projectodo.sources." .. name)
+    end
+  end
+
+  return sources
 end
 
----@class ProjectodoTreesitter
----@field get_undone_todos_query (fun(): string)
----@field get_projects_query (fun(): string)
+---@enum ProjectodoProviderNames
+local providers = {
+  MINI_STARTER = "mini-starter",
+}
 
----@return ProjectodoTreesitter
-function M.get_treesitter_module()
-  local config = require "projectodo.config"
-  return require(("projectodo.treesitter.%s"):format(config.options.notes.extension))
+local function is_supported(name)
+  local support = false
+  for _, id in pairs(providers) do
+    if id == name then
+      support = true
+      break
+    end
+  end
+  return support
+end
+
+---@param name ProjectodoProviderNames
+---@return ProjectodoProvider
+function M.get_provider(name)
+  assert(is_supported(name), "This provider is not supported")
+  return require("projectodo.providers." .. name)
 end
 
 return M
