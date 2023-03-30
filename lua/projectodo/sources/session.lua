@@ -5,7 +5,6 @@ local Item = require "projectodo.classes.item"
 local Session = Source:create "session"
 
 function Session:load()
-  vim.print "called"
   if vim.fn.isdirectory(vim.fn.expand(self.config.dir)) == 1 then
     local items = {}
     for name, type in vim.fs.dir(self.config.dir) do
