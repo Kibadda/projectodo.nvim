@@ -21,7 +21,7 @@ function Gitlab:load()
         local labels = {}
         for _, issue in ipairs(issues) do
           for _, label in ipairs(issue.labels) do
-            if vim.tbl_contains(self.config.labels, label) then
+            if not vim.tbl_contains(self.config.ignore_labels, label) then
               labels[label] = labels[label] or {}
               table.insert(labels[label], Item:create(issue.title))
             end

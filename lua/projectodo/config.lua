@@ -12,7 +12,7 @@ function M.defaults()
         access_token = "GITLAB_ACCESS_TOKEN",
         ---@type number
         project_id = nil,
-        labels = {},
+        ignore_labels = {},
         cache = vim.fn.stdpath "cache" .. "/projectodo.json",
         force = false,
       },
