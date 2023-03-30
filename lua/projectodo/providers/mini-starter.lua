@@ -11,22 +11,21 @@ local function build_source(source, session)
     local lines = {}
 
     if source.config.uses_session and session then
-      local index
+      local indices = {}
       for i, item in ipairs(session:get()[1].items) do
-        if item.title == section.title:lower() then
-          index = i
-          break
+        if vim.startswith(item.title, section.title:lower()) then
+          table.insert(lines, {
+            name = item.title,
+            action = item.action,
+            section = section.title,
+          })
+          table.insert(indices, i)
         end
       end
-
-      if index then
-        ---@type ProjectodoItem
-        local s = table.remove(session:get()[1].items, index)
-        table.insert(lines, {
-          name = s.title,
-          action = s.action,
-          section = section.title,
-        })
+      local count = 0
+      for _, i in ipairs(indices) do
+        table.remove(session:get()[1].items, i - count)
+        count = count + 1
       end
     end
 
