@@ -3,32 +3,38 @@ local M = {}
 function M.defaults()
   ---@class ProjectodoConfig
   local defaults = {
-    ---@type "vim-startify"|"mini-starter"
-    plugin = "vim-startify",
-    notes = {
-      dir = "$HOME/notes",
-      header = "Current projects",
-      main = "index",
-      ---@type "norg"
-      extension = "norg",
+    sources = {
+      ---@class ProjectodoConfigGitlab
+      gitlab = {
+        enabled = false,
+        uses_session = false,
+        url = "",
+        access_token = "GITLAB_ACCESS_TOKEN",
+        ---@type number
+        project_id = nil,
+        labels = {},
+        cache = vim.fn.stdpath "cache" .. "/projectodo.json",
+        force = false,
+      },
+      ---@class ProjectodoConfigTreesitter
+      treesitter = {
+        enabled = false,
+        uses_session = false,
+        dir = "",
+        header = "",
+        main = "",
+      },
+      ---@class ProjectodoConfigSession
+      session = {
+        enabled = false,
+        dir = vim.fn.stdpath "data" .. "/session",
+      },
     },
-    sessions = vim.fn.stdpath "data" .. "/session",
-    projects = {
-      max = 6,
-      todos = 9,
-    },
-    main_section = {
-      name = "Main Section",
-      sessions = {},
-      has_create_command = true,
-    },
-    log = vim.fn.stdpath "state" .. "/projectodo.log",
   }
   return defaults
 end
 
----@type ProjectodoConfig
-M.options = {}
+M.options = M.defaults()
 
 ---@param user_config? ProjectodoConfig
 function M.set(user_config)
