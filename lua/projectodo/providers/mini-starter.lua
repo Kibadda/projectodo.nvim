@@ -48,7 +48,7 @@ end
 function MiniStarter:build()
   local sources = require("projectodo.utils").get_sources()
 
-  local gitlab = sources.gitlab
+  local git = sources.git
   local treesitter = sources.treesitter
   local session = sources.session
 
@@ -57,9 +57,9 @@ function MiniStarter:build()
   end
 
   local sections = {}
-  if gitlab then
-    gitlab:load()
-    table.insert(sections, build_source(gitlab, session))
+  if git then
+    git:load()
+    table.insert(sections, build_source(git, session))
   end
   if treesitter then
     treesitter:load()

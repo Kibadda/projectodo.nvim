@@ -1,36 +1,45 @@
 local Source = require "projectodo.classes.source"
 local curl = require "plenary.curl"
 local Section = require "projectodo.classes.section"
-local Item = require "projectodo.classes.item"
 
-local Gitlab = Source:create "gitlab"
+local Git = Source:create "git"
 
-function Gitlab:load()
+---@class ProjectodoGitAdapter
+---@field get_data function
+
+---@param adapter string
+---@return ProjectodoGitAdapter
+local function get_adapter(adapter)
+  if adapter == "gitlab" then
+    return require "projectodo.sources.git.gitlab"
+  elseif adapter == "github" then
+    return require "projectodo.sources.git.github"
+  else
+    return {
+      get_data = function()
+        return {}
+      end,
+    }
+  end
+end
+
+function Git:load()
   if self.config.force or vim.fn.filereadable(self.config.cache) == 0 then
-    local response =
-      curl.get(("https://%s/api/v4/projects/%d/issues?state=opened"):format(self.config.url, self.config.project_id), {
-        headers = {
-          ["PRIVATE-TOKEN"] = vim.env[self.config.access_token],
-        },
-      })
+    local response = curl.get(self.config.url, {
+      headers = {
+        ["PRIVATE-TOKEN"] = vim.env[self.config.access_token],
+      },
+    })
 
     if response and response.status == 200 then
       local issues = vim.fn.json_decode(response.body)
 
       if issues then
-        local labels = {}
-        for _, issue in ipairs(issues) do
-          for _, label in ipairs(issue.labels) do
-            if not vim.tbl_contains(self.config.ignore_labels, label) then
-              labels[label] = labels[label] or {}
-              table.insert(labels[label], Item:create(issue.title))
-            end
-          end
-        end
+        local data = get_adapter(self.config.adapter).get_data(issues, self.config.ignore_labels)
 
         ---@type ProjectodoSection[]
         local sections = {}
-        for title, items in pairs(labels) do
+        for title, items in pairs(data) do
           table.insert(sections, Section:create(title, items))
         end
 
@@ -56,8 +65,8 @@ function Gitlab:load()
   end
 end
 
-function Gitlab:open()
+function Git:open()
   vim.fn.system(("xdg-open https://%s/projects/%d"):format(self.config.url, self.config.project_id))
 end
 
-return Gitlab
+return Git

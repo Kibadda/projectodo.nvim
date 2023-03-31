@@ -4,8 +4,8 @@ function M.defaults()
   ---@class ProjectodoConfig
   local defaults = {
     sources = {
-      ---@class ProjectodoConfigGitlab
-      gitlab = {
+      ---@class ProjectodoConfigGit
+      git = {
         enabled = false,
         uses_session = false,
         url = "",
@@ -15,6 +15,8 @@ function M.defaults()
         ignore_labels = {},
         cache = vim.fn.stdpath "cache" .. "/projectodo.json",
         force = false,
+        ---@type "gitlab"|"github"
+        adapter = "gitlab",
       },
       ---@class ProjectodoConfigTreesitter
       treesitter = {
