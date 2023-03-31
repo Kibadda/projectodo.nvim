@@ -21,16 +21,13 @@ local function get_queries(filetype)
 end
 
 function Treesitter:load()
-  local split = vim.split(self.config.main, ".", { plain = true })
-  local filetype = split[#split]
-
-  local queries = get_queries(filetype)
+  local queries = get_queries(self.config.filetype)
 
   local dir = vim.fn.expand(self.config.dir .. "/")
 
-  local main_as_string = table.concat(vim.fn.readfile(dir .. self.config.main), "\n")
-  local main_root = vim.treesitter.get_string_parser(main_as_string, filetype):parse()[1]:root()
-  local main_query = vim.treesitter.query.parse(filetype, queries.sections)
+  local main_as_string = table.concat(vim.fn.readfile(dir .. self.config.main .. "." .. self.config.filetype), "\n")
+  local main_root = vim.treesitter.get_string_parser(main_as_string, self.config.filetype):parse()[1]:root()
+  local main_query = vim.treesitter.query.parse(self.config.filetype, queries.sections)
 
   for pattern, match in main_query:iter_matches(main_root, "", 1, -1) do
     if pattern == 1 then
@@ -43,9 +40,9 @@ function Treesitter:load()
         end
       end
 
-      local section_as_string = table.concat(vim.fn.readfile(dir .. capture.file_name .. "." .. filetype))
-      local section_root = vim.treesitter.get_string_parser(section_as_string, filetype):parse()[1]:root()
-      local section_query = vim.treesitter.query.parse(filetype, queries.items)
+      local section_as_string = table.concat(vim.fn.readfile(dir .. capture.file_name .. "." .. self.config.filetype))
+      local section_root = vim.treesitter.get_string_parser(section_as_string, self.config.filetype):parse()[1]:root()
+      local section_query = vim.treesitter.query.parse(self.config.filetype, queries.items)
 
       local items = {}
       for _, section_match in section_query:iter_matches(section_root, "", 1, -1) do

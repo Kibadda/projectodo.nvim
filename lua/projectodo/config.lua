@@ -25,6 +25,8 @@ function M.defaults()
         dir = "",
         header = "",
         main = "",
+        ---@type "norg"
+        filetype = "norg",
       },
       ---@class ProjectodoConfigSession
       session = {
