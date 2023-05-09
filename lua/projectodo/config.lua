@@ -13,6 +13,7 @@ function M.defaults()
         ---@type number
         project_id = nil,
         ignore_labels = {},
+        ---@type string
         cache = vim.fn.stdpath "cache" .. "/projectodo.json",
         force = false,
         ---@type "gitlab"|"github"
@@ -31,6 +32,7 @@ function M.defaults()
       ---@class ProjectodoConfigSession
       session = {
         enabled = false,
+        ---@type string
         dir = vim.fn.stdpath "data" .. "/session",
       },
     },

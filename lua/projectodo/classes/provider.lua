@@ -1,5 +1,5 @@
 ---@class ProjectodoProvider
----@field build (fun(self: ProjectodoSource): table)
+---@field build (fun(self: ProjectodoProvider): table)
 ---@field _config ProjectodoConfig
 local Provider = {}
 
