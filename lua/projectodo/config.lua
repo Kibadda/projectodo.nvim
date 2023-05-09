@@ -34,6 +34,8 @@ function M.defaults()
         enabled = false,
         ---@type string
         dir = vim.fn.stdpath "data" .. "/session",
+        ---@type fun(session: string): function
+        load_action = nil,
       },
     },
   }

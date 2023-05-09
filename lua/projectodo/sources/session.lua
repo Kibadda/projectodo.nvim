@@ -9,12 +9,11 @@ function Session:load()
     local items = {}
     for name, type in vim.fs.dir(self.config.dir) do
       if type == "file" then
-        table.insert(
-          items,
-          Item:create(name, function()
+        local load_action = self.config.load_action and self.config.load_action(name)
+          or function()
             vim.cmd.source(("%s/%s"):format(self.config.dir, name))
-          end)
-        )
+          end
+        table.insert(items, Item:create(name, load_action))
       end
     end
     self.data = { Section:create("Sessions", items) }
