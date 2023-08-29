@@ -18,6 +18,10 @@ function M.defaults()
         force = false,
         ---@type "gitlab"|"github"
         adapter = "gitlab",
+        ---@type fun(issue: table): boolean
+        filter = function(_)
+          return true
+        end,
       },
       ---@class ProjectodoConfigTreesitter
       treesitter = {
