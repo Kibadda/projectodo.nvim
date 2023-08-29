@@ -1,16 +1,16 @@
 local M = {}
 
 function M.check()
-  vim.health.report_start "projectodo report"
+  vim.health.start "projectodo report"
 
   -- TODO: implement health checks
-  vim.health.report_ok "looks good"
+  vim.health.ok "looks good"
 
   local Config = require "terminal.config"
   local valid = vim.tbl_keys(Config.defaults())
   for opt in pairs(Config.options) do
     if not vim.tbl_contains(valid, opt) then
-      vim.health.report_warn("unknown option: " .. opt)
+      vim.health.warn("unknown option: " .. opt)
     end
   end
 end
